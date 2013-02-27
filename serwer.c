@@ -1,22 +1,30 @@
-// teoria http://students.mimuw.edu.pl/SO/Linux/Temat03/fifo.html
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <linux/stat.h>
+#include <signal.h>
 
 char *dane = "dane";
 char *wyniki = "wyniki";
+
+void wyjdz(int sgn) {
+    printf("Zlapano SIGINT, usuwam wezel i wychodze z serwera...\n");
+    unlink(dane);
+    exit(0);
+}
 
 int funkcja(int n) {
     return n+1;
 }
 
 int main() {
+    signal(SIGINT, wyjdz);
+
     FILE *plik1;
     FILE *plik2;
 
-    umask(0);
+    //umask(0);
     mkfifo(dane, 0666);
 
     int d,w;
