@@ -32,8 +32,8 @@ int main(int argc, char *argv[]) {
     } while (c != 27);
     wiadomosc[z] = '\0';
 
-    char bufor_klienta[64] = "/home/ashiren/dane";
-    char bufor_serwera[64] = "/home/ashiren/wyniki";
+    char bufor_klienta[64] = "/home/jacek/dane";
+    char bufor_serwera[64] = "/home/jacek/wyniki";
     int file;
     file = open(bufor_klienta,O_WRONLY|O_CREAT|O_EXCL|O_APPEND, S_IRWXU);
     if (file == -1) {
