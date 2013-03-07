@@ -40,7 +40,6 @@ int main(int argc, char *argv[]) {
     strcat(bufor_serwera,"/home/studinf/");
     strcat(bufor_serwera,serwer);
     strcat(bufor_serwera,"/wyniki");
-//    printf("%s %s \n",bufor_klienta,bufor_serwera);
     int file;
     file = open(bufor_klienta,O_WRONLY|O_CREAT|O_EXCL|O_APPEND, S_IRWXU);
     if (file == -1) {
@@ -54,12 +53,6 @@ int main(int argc, char *argv[]) {
     open(lockfile, O_CREAT|O_EXCL, 0);
 
     printf("Czekam na odpowiedz serwera...\n");
-    sleep(1);
-    while (open(lockfile, O_CREAT|O_EXCL, 0) == -1) {
-        printf("Serwer zajety, prosze czekac...\n");
-        sleep(2);
-    }
-    file = open(bufor_serwera, O_RDONLY, S_IRWXU);
     while ((file = open(bufor_serwera, O_RDONLY, S_IRWXU)) == -1);
     
     char odpowiedz[256] = "";

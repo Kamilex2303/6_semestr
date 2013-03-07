@@ -17,9 +17,10 @@ int main() {
     int i;
 
     unlink(BUFOR_SERWERA);
+    unlink(LOCKFILE);
     printf("Serwer nasluchuje...\n");
     while (1 == 1) {
-        while ((file = open(BUFOR_KLIENTA, O_RDONLY, S_IRWXU)) == -1) unlink(LOCKFILE);
+        while ((file = open(BUFOR_KLIENTA, O_RDONLY, S_IRWXU)) == -1);
         read(file, wiadomosc, 256);
         printf("Wiadomosc od uzytkownika ");
         i = 0;
