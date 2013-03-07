@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#define BUFOR_KLIENTA "/home/jacek/dane"
-#define BUFOR_SERWERA "/home/jacek/wyniki"
-#define LOCKFILE "/home/jacek/lockfile"
+#define BUFOR_KLIENTA "/home/studinf/jdermont/dane"
+#define BUFOR_SERWERA "/home/studinf/jdermont/wyniki"
+#define LOCKFILE "/home/studinf/jdermont/lockfile"
 
 int main() {
     char wiadomosc[256] = "";
@@ -16,6 +16,7 @@ int main() {
     char c;
     int i;
 
+    unlink(BUFOR_SERWERA);
     printf("Serwer nasluchuje...\n");
     while (1 == 1) {
         while ((file = open(BUFOR_KLIENTA, O_RDONLY, S_IRWXU)) == -1) unlink(LOCKFILE);

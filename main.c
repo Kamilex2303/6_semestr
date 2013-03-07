@@ -10,15 +10,15 @@ int main(int argc, char *argv[]) {
         printf("Podaj nazwe serwera jako parametr. np ./klient jdermont\n");
         exit(0);
     }
-    char *klient = "jdermont";
     char *serwer = argv[1];
-    char lockfile[64] = "/home/jacek/lockfile";
-    //strcat(lockfile,"/home/studinf/");
-    //strcat(lockfile,argv[1]);
-    //strcat(lockfile,"/lockfile");
+    char lockfile[64] = "";
+    strcat(lockfile,"/home/studinf/");
+    strcat(lockfile,serwer);
+    strcat(lockfile,"/lockfile");
 
+    printf("Nazwa serwera: %s\n",serwer);
     while (open(lockfile, O_CREAT|O_EXCL, 0) == -1) {
-        printf("Serwer zajety, prosze czekac...\n");
+        printf("Serwer zajety lub niedostepny, prosze czekac...\n");
         sleep(3);
     }
 
@@ -32,27 +32,36 @@ int main(int argc, char *argv[]) {
     } while (c != 27);
     wiadomosc[z] = '\0';
 
-    char bufor_klienta[64] = "/home/jacek/dane";
-    char bufor_serwera[64] = "/home/jacek/wyniki";
+    char bufor_klienta[64] = "";
+    strcat(bufor_klienta,"/home/studinf/");
+    strcat(bufor_klienta,serwer);
+    strcat(bufor_klienta,"/dane");
+    char bufor_serwera[64] = "";
+    strcat(bufor_serwera,"/home/studinf/");
+    strcat(bufor_serwera,serwer);
+    strcat(bufor_serwera,"/wyniki");
+//    printf("%s %s \n",bufor_klienta,bufor_serwera);
     int file;
     file = open(bufor_klienta,O_WRONLY|O_CREAT|O_EXCL|O_APPEND, S_IRWXU);
     if (file == -1) {
         printf("Wystapil blad, nie mozna otworzyc pliku %s.\n",bufor_klienta);
         exit(1);
     }
-    write(file, klient, strlen(klient));
+    write(file, "jdermont", strlen("jdermont"));
     write(file, "\n", 1);
     write(file, wiadomosc, z);
     close(file);
     open(lockfile, O_CREAT|O_EXCL, 0);
 
     printf("Czekam na odpowiedz serwera...\n");
+    sleep(1);
     while (open(lockfile, O_CREAT|O_EXCL, 0) == -1) {
         printf("Serwer zajety, prosze czekac...\n");
-        sleep(3);
+        sleep(2);
     }
     file = open(bufor_serwera, O_RDONLY, S_IRWXU);
     while ((file = open(bufor_serwera, O_RDONLY, S_IRWXU)) == -1);
+    
     char odpowiedz[256] = "";
     read(file, odpowiedz, 256);
     int i = 0;
