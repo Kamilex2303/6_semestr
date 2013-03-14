@@ -1,5 +1,4 @@
 #!/bin/bash
-
 if [ $# -lt 2 ]
 then
   echo "Uzycie: ./szukaj.sh szukany_plik katalog"
@@ -12,42 +11,48 @@ then
   exit 0
 fi
 
-needle=$1
-haystack=$2
+plik=$1
+katalog=$2
 if [ "$3" == "" ]
 then
-  first_recursion_level=true
+  pierwszy_raz=true
 fi
 
-# wypisujemy znalezione pliki i liczymy je
-found_count=0
-files=`ls -1 $haystack`
+# szukamy pliki; wywolujemy rekurencyjnie
+pids=""
+ilosc=0
+files=`ls -1 $katalog`
 for file in $files
 do
-  if [ "$file" == "$needle" ]
+  if [ "$file" == "$plik" ]
   then
-    if [ -f $haystack/$file ]
+    if [ -f $katalog/$file ]
     then
-      echo "Znaleziono plik: $haystack/$file"
+      echo "Znaleziono plik: $katalog/$file"
     else
-      echo "Znaleziono katalog: $haystack/$file"
+      echo "Znaleziono katalog: $katalog/$file"
     fi
-    found_count=$[$found_count+1]
-  elif [ -d $haystack/$file ]
+    ilosc=$[$ilosc+1]
+  elif [ -d $katalog/$file ]
   then
-    $0 $needle $haystack/$file false &
-    wait $!
-    found_count=$[$found_count+$?]
-    #pids=("${pids[@]}" $!)
+    $0 $plik $katalog/$file xxx &
+    pids="$pids $!"
   fi
 done
 
-if [ ! $first_recursion_level ]
+# czekamy na zakonczenie procesow i dodajemy ich kody wyjsciowe do ilosci
+for pid in $pids
+do
+  wait $pid
+  ilosc=$[$ilosc+$?]
+done
+
+if [ ! $pierwszy_raz ]
 then
-  exit $found_count
-elif [ $found_count -eq 0 ]
+  exit $ilosc
+elif [ $ilosc -eq 0 ]
 then
-  echo "Nie znaleziono $needle."
+  echo "Nie znaleziono $plik."
 else
-  echo "Ilosc znalezionych plikow: $found_count"
+  echo "Ilosc znalezionych plikow: $ilosc"
 fi
